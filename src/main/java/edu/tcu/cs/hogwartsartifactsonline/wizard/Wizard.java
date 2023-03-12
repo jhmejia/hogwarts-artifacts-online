@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,7 +19,9 @@ public class Wizard implements Serializable {
     private String name;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "owner")
-    private List<Artifact> artifacts;
+    private List<Artifact> artifacts = new ArrayList<>();
+
+
 
     public Wizard() {
     }
@@ -45,5 +48,10 @@ public class Wizard implements Serializable {
 
     public void setArtifacts(List<Artifact> artifacts) {
         this.artifacts = artifacts;
+    }
+
+    public void addArtifact(Artifact artifact) {
+        this.artifacts.add(artifact);
+        artifact.setOwner(this);
     }
 }
