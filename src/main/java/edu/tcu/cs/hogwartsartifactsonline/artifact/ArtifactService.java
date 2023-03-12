@@ -1,5 +1,6 @@
 package edu.tcu.cs.hogwartsartifactsonline.artifact;
 
+import edu.tcu.cs.hogwartsartifactsonline.artifact.utils.IdWorker;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +12,12 @@ public class ArtifactService {
 
     private final ArtifactRepository artifactRepository;
 
-    public ArtifactService(ArtifactRepository artifactRepository) {
-        this.artifactRepository = artifactRepository;
-    }
+    private final IdWorker idWorker;
 
+    public ArtifactService(ArtifactRepository artifactRepository, IdWorker idWorker) {
+        this.artifactRepository = artifactRepository;
+        this.idWorker = idWorker;
+    }
 
     public Artifact findById(String artifactId) {
         return this.artifactRepository.findById(artifactId)
@@ -23,5 +26,11 @@ public class ArtifactService {
 
     public List<Artifact> findAll() {
         return this.artifactRepository.findAll();
+    }
+
+    public Artifact save(Artifact newArtifact) {
+        //Responsibility of server to generate id
+        newArtifact.setId(this.idWorker.nextId() + "");
+        return this.artifactRepository.save(newArtifact);
     }
 }
