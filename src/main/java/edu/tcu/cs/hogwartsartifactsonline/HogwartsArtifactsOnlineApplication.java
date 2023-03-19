@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class HogwartsArtifactsOnlineApplication {
 
+    // This is the main method
+
     public static void main(String[] args) {
         SpringApplication.run(HogwartsArtifactsOnlineApplication.class, args);
     }
