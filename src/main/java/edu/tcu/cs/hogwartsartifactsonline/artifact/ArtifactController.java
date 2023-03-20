@@ -54,7 +54,7 @@ public class ArtifactController {
     }
 
     @PutMapping("/api/v1/artifacts/{artifactId}")
-    public Result updateArtifact() {
+    public Result updateArtifact(@PathVariable String artifactId, @Valid @RequestBody ArtifactDto artifactDto) {
         //TODO
         return null;
     }
