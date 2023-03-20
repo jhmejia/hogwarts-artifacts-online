@@ -10,7 +10,10 @@ public class HogwartsArtifactsOnlineApplication {
 
     // This is the main method
 
-
+//<<<<<<< HEAD
+//
+//=======
+//>>>>>>> 84c554a788909a6a885ccaee0918e5bd951ca7b7
     public static void main(String[] args) {
         SpringApplication.run(HogwartsArtifactsOnlineApplication.class, args);
     }
