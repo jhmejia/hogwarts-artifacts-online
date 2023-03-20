@@ -52,4 +52,10 @@ public class ArtifactController {
         ArtifactDto savesdArtifactDto = this.artifactToArtifactDtoConverter.convert(savedArtifact);
         return new Result(true, StatusCode.SUCCESS, "Add Success", savesdArtifactDto);
     }
+
+    @PutMapping("/api/v1/artifacts/{artifactId}")
+    public Result updateArtifact() {
+        //TODO
+        return null;
+    }
 }
