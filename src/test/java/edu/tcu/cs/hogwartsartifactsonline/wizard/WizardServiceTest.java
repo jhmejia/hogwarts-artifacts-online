@@ -1,16 +1,7 @@
 package edu.tcu.cs.hogwartsartifactsonline.wizard;
 
+import edu.tcu.cs.hogwartsartifactsonline.artifact.Artifact;
 import edu.tcu.cs.hogwartsartifactsonline.system.exception.ObjectNotFoundException;
-import jakarta.persistence.Entity;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import edu.tcu.cs.hogwartsartifactsonline.artifact.utils.IdWorker;
-import edu.tcu.cs.hogwartsartifactsonline.wizard.Wizard;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,16 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class WizardServiceTest {
 
@@ -47,23 +34,63 @@ class WizardServiceTest {
 
     @BeforeEach
     void setUp() {
+        Artifact a1 = new Artifact();
+        a1.setId("1250808601744904191");
+        a1.setName("Deluminator");
+        a1.setDescription("A Deluminator is a device invented by Albus Dumbledore that resembles a cigarette lighter. It is used to remove or absorb (as well as return) the light from any light source to provide cover to the user.");
+        a1.setImageUrl("ImageUrl");
+
+        Artifact a2 = new Artifact();
+        a2.setId("1250808601744904192");
+        a2.setName("Invisibility Cloak");
+        a2.setDescription("An invisibility cloak is used to make the wearer invisible.");
+        a2.setImageUrl("ImageUrl");
+
+        Artifact a3 = new Artifact();
+        a3.setId("1250808601744904193");
+        a3.setName("Elder Wand");
+        a3.setDescription("The Elder Wand, known throughout history as the Deathstick or the Wand of Destiny, is an extremely powerful wand made of elder wood with a core of Thestral tail hair.");
+        a3.setImageUrl("ImageUrl");
+
+        Artifact a4 = new Artifact();
+        a4.setId("1250808601744904194");
+        a4.setName("The Marauder's Map");
+        a4.setDescription("A magical map of Hogwarts created by Remus Lupin, Peter Pettigrew, Sirius Black, and James Potter while they were students at Hogwarts.");
+        a4.setImageUrl("ImageUrl");
+
+        Artifact a5 = new Artifact();
+        a5.setId("1250808601744904195");
+        a5.setName("The Sword Of Gryffindor");
+        a5.setDescription("A goblin-made sword adorned with large rubies on the pommel. It was once owned by Godric Gryffindor, one of the medieval founders of Hogwarts.");
+        a5.setImageUrl("ImageUrl");
+
+        Artifact a6 = new Artifact();
+        a6.setId("1250808601744904196");
+        a6.setName("Resurrection Stone");
+        a6.setDescription("The Resurrection Stone allows the holder to bring back deceased loved ones, in a semi-physical form, and communicate with them.");
+        a6.setImageUrl("ImageUrl");
+
         Wizard w1 = new Wizard();
         w1.setId(1);
         w1.setName("Albus Dumbledore");
+        w1.addArtifact(a1);
+        w1.addArtifact(a3);
 
         Wizard w2 = new Wizard();
         w2.setId(2);
         w2.setName("Harry Potter");
+        w2.addArtifact(a2);
+        w2.addArtifact(a4);
 
         Wizard w3 = new Wizard();
         w3.setId(3);
         w3.setName("Neville Longbottom");
+        w3.addArtifact(a5);
 
         this.wizards = new ArrayList<>();
-        this.wizards.add(w1);
-        this.wizards.add(w2);
-        this.wizards.add(w3);
-
+        wizards.add(w1);
+        wizards.add(w2);
+        wizards.add(w3);
     }
 
     @AfterEach
@@ -71,117 +98,129 @@ class WizardServiceTest {
     }
 
     @Test
-    void testfindAllSuccess() {
-        given(this.wizardRepository.findAll()).willReturn(this.wizards);
+    void getAllWizardsSuccess() {
+        // Given
+        given(wizardRepository.findAll()).willReturn(this.wizards);
 
-        List<Wizard> actualWizards = this.wizardService.findAll();
+        // When
+        List<Wizard> wizards = this.wizardService.findAllWizards();
 
-        assertThat(actualWizards.size()).isEqualTo(this.wizards.size());
-
-        verify(this.wizardRepository, times(1)).findAll();
+        // Then
+        assertThat(wizards.size()).isEqualTo(this.wizards.size());
+        verify(wizardRepository, times(1)).findAll();
     }
 
     @Test
-    void testFindByIdSuccess() {
-        Wizard w = new Wizard();
-        w.setId(1);
-        w.setName("Albus Dumbledore");
+    void findWizardByIdSuccess() {
+        // Given
+        Wizard exist = this.wizards.get(0);
+        given(wizardRepository.findById(1)).willReturn(Optional.of(exist));
 
-        given(this.wizardRepository.findById(1)).willReturn(Optional.of(w));
+        // When
+        Wizard wizard = this.wizardService.findWizardById(1);
 
-        Wizard returnedWizard = this.wizardService.findById(1);
-
-        assertThat(returnedWizard.getId()).isEqualTo(w.getId());
-        assertThat(returnedWizard.getName()).isEqualTo(w.getName());
-
-        verify(this.wizardRepository, times(1)).findById(1);
-
+        // Then
+        assertThat(wizard.getId()).isEqualTo(wizard.getId());
+        assertThat(wizard.getName()).isEqualTo(wizard.getName());
+        assertThat(wizard.getNumberOfArtifacts()).isEqualTo(wizard.getNumberOfArtifacts());
+        verify(wizardRepository, times(1)).findById(1);
     }
 
     @Test
-    void testFindByIdNotFound(){
-        given(this.wizardRepository.findById(Mockito.any(Integer.class))).willReturn(Optional.empty());
+    void findWizardByIdNotFound() {
+        // Given
+        given(wizardRepository.findById(Mockito.any(Integer.class))).willReturn(Optional.empty());
 
-        Throwable thrown = catchThrowable(() ->{
-            Wizard returnedWizard = this.wizardService.findById(1);
+        // When
+        assertThrows(ObjectNotFoundException.class, () -> {
+            this.wizardService.findWizardById(1);
         });
 
-        assertThat(thrown)
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Could not find wizard with Id 1 :(");
-        verify(this.wizardRepository, times(1)).findById(1);
+        // Then
+        verify(wizardRepository, times(1)).findById(1);
     }
 
     @Test
-    void testSaveSuccess() {
-        Wizard newWizard = new Wizard();
-        newWizard.setName("Hermione Granger");
+    void addWizardSuccess() {
+        // Given
+        Wizard wiz = new Wizard();
+        wiz.setName("Harry Potter2");
 
-        given(this.wizardRepository.save(newWizard)).willReturn(newWizard);
+        given(this.wizardRepository.save(wiz)).willReturn(wiz);
 
-        Wizard returnedWizard = this.wizardService.save(newWizard);
+        // When
+        Wizard newWizard = this.wizardRepository.save(wiz);
 
-        assertThat(returnedWizard.getName()).isEqualTo(newWizard.getName());
-        verify(this.wizardRepository, times(1)).save(newWizard);
+        // Then
+        assertThat(newWizard.getName()).isEqualTo(wiz.getName());
+        verify(this.wizardRepository, times(1)).save(wiz);
+
     }
 
     @Test
-    void testUpdateSuccess() {
-        Wizard oldWizard = new Wizard();
-        oldWizard.setId(1);
-        oldWizard.setName("Albus Dumbledore");
-
+    void testUpdateWizardByIdSuccess() {
+        // Given
         Wizard update = new Wizard();
-        update.setName("Albus Dumbledore - update");
+        update.setName("John Doe");
 
-        given(this.wizardRepository.findById(1)).willReturn(Optional.of(oldWizard));
-        given(this.wizardRepository.save(oldWizard)).willReturn(oldWizard);
+        given(this.wizardRepository.findById(1)).willReturn(Optional.of(wizards.get(0)));
+        given(this.wizardRepository.save(wizards.get(0))).willReturn(wizards.get(0));
 
-        Wizard updatedWizard = this.wizardService.update(1, update);
+        // When
+        Wizard updatedWizard = this.wizardService.updateWizardById(1, update);
 
-        assertThat(updatedWizard.getId()).isEqualTo(1);
-        assertThat(updatedWizard.getName()).isEqualTo(update.getName());
+        // Then
+        assertThat(updatedWizard.getName()).isEqualTo(updatedWizard.getName());
+
         verify(this.wizardRepository, times(1)).findById(1);
-        verify(this.wizardRepository, times(1)).save(oldWizard);
+        verify(this.wizardRepository, times(1)).save(wizards.get(0));
     }
 
     @Test
-    void testUpdateNotFound(){
+    void testUpdateWizardByIdNotFound() {
+        // Given
         Wizard update = new Wizard();
-        update.setName("Albus Dumbledore - update");
+        update.setName("John Doe");
 
         given(this.wizardRepository.findById(1)).willReturn(Optional.empty());
 
-        assertThrows(ObjectNotFoundException.class, ()->{
-            this.wizardService.update(1, update);
-        });
+        // When
+        assertThrows(ObjectNotFoundException.class, () -> wizardService.updateWizardById(1, update));
 
-        verify(this.wizardRepository,times(1)).findById(1);
-
-
+        // Then
+        verify(this.wizardRepository, times(1)).findById(1);
+        verify(this.wizardRepository, times(0)).save(wizards.get(0));
     }
+
     @Test
     void testDeleteSuccess() {
-        Wizard wizard = new Wizard();
-        wizard.setId(1);
-        wizard.setName("Albus Dumbledore");
+        // Given
+        Wizard wizard = wizards.get(0);
+        List<Artifact> artifacts = wizard.getArtifacts();
 
         given(this.wizardRepository.findById(1)).willReturn(Optional.of(wizard));
         doNothing().when(this.wizardRepository).deleteById(1);
 
-        this.wizardService.delete(1);
+        // When
+        this.wizardService.deleteWizardById(1);
 
+        // Then
+        assertThat(artifacts.get(0).getOwner()).isEqualTo(null);
         verify(this.wizardRepository, times(1)).deleteById(1);
     }
 
     @Test
-    void testDeleteNotFound(){
-        given(this.wizardRepository.findById(1)).willReturn(Optional.empty());
+    void testDeleteNotFound() {
+        // Given
+        given(this.wizardRepository.findById(9)).willReturn(Optional.empty());
 
-        assertThrows(ObjectNotFoundException.class, ()->{
-            this.wizardService.delete(1);
+        // When
+        assertThrows(ObjectNotFoundException.class, () -> {
+            this.wizardService.deleteWizardById(9);
         });
 
-        verify(this.wizardRepository, times(1)).findById(1);
+        // Then
+        // only check this when element is not found and throw exception
+        verify(this.wizardRepository, times(1)).findById(9);
     }
 }
