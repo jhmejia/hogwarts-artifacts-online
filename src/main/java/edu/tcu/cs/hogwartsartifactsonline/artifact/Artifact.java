@@ -11,8 +11,11 @@ import java.io.Serializable;
 public class Artifact implements Serializable {
     @Id
     private String id;
+
     private String name;
+
     private String description;
+
     private String imageUrl;
 
     @ManyToOne
