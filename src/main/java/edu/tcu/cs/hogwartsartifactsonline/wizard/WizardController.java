@@ -16,7 +16,6 @@ public class WizardController {
 
     private final WizardService wizardService;
     private final WizardToWizardDtoConverter wizardToWizardDtoConverter;
-
     private final WizardDtoToWizardConverter wizardDtoToWizardConverter;
 
     public WizardController(WizardService wizardService, WizardToWizardDtoConverter wizardToWizardDtoConverter, WizardDtoToWizardConverter wizardDtoToWizardConverter) {
