@@ -16,6 +16,7 @@ public class WizardController {
 
     private final WizardService wizardService;
     private final WizardToWizardDtoConverter wizardToWizardDtoConverter;
+
     private final WizardDtoToWizardConverter wizardDtoToWizardConverter;
 
     public WizardController(WizardService wizardService, WizardToWizardDtoConverter wizardToWizardDtoConverter, WizardDtoToWizardConverter wizardDtoToWizardConverter) {
@@ -64,6 +65,13 @@ public class WizardController {
         this.wizardService.deleteWizardById(wizardId);
 
         return new Result(true, StatusCode.SUCCESS, "Delete Success");
+    }
+
+    @PutMapping("/{wizardId}/artifacts/{artifactId}")
+    public Result assignArtifact(@PathVariable Integer wizardId, @PathVariable String artifactId) {
+        this.wizardService.assignArtifact(wizardId, artifactId);
+
+        return new Result(true, StatusCode.SUCCESS, "Artifact Assignment Success");
     }
 
 }
