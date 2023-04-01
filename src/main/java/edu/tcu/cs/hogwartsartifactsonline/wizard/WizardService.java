@@ -14,6 +14,7 @@ import java.util.Optional;
 public class WizardService {
     private final WizardRepository wizardRepository;
 
+
     private final ArtifactRepository artifactRepository;
 
     public WizardService(WizardRepository wizardRepository, ArtifactRepository artifactRepository) {
@@ -55,8 +56,8 @@ public class WizardService {
                 .findById(wizardId)
                 .orElseThrow(() -> new ObjectNotFoundException("wizard", wizardId));
 
-        // remove the owner of artifact belongs to w
-        // if not it will cause error as artifact already have foreign key refer to w by ID
+        // remove the foreign key reference to wizard
+        // If we don't do this, we will get an error: "A collection with cascade="all-delete-orphan" was no longer referenced by the owning entity instance"
         w.deleteArtifacts();
 
         this.wizardRepository.deleteById(wizardId);
