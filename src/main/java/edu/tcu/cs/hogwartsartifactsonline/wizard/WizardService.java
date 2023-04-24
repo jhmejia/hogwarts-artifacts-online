@@ -68,6 +68,7 @@ public class WizardService {
         // We need to see if the artifact is already owned by some wizard.
         if (artifactToBeAssigned.getOwner() != null) {
             artifactToBeAssigned.getOwner().removeArtifact(artifactToBeAssigned);
+
         }
         wizard.addArtifact(artifactToBeAssigned);
     }

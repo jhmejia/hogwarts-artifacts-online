@@ -10,13 +10,14 @@ import java.util.Collection;
 
 public class MyUserPrincipal implements UserDetails {
 
+
     private HogwartsUser hogwartsUser;
 
     public MyUserPrincipal(HogwartsUser hogwartsUser) {
         this.hogwartsUser = hogwartsUser;
     }
 
-
+    // This is the method that is called when we want to get the authorities of the user
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 

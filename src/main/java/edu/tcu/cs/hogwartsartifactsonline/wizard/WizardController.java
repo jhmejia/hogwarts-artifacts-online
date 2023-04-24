@@ -43,6 +43,7 @@ public class WizardController {
     public Result findWizardById(@PathVariable Integer wizardId) {
         Wizard foundWizard = this.wizardService.findById(wizardId);
         WizardDto wizardDto = this.wizardToWizardDtoConverter.convert(foundWizard);
+
         return new Result(true, StatusCode.SUCCESS, "Find One Success", wizardDto);
     }
 
@@ -72,6 +73,8 @@ public class WizardController {
     @PutMapping("/{wizardId}/artifacts/{artifactId}")
     public Result assignArtifact(@PathVariable Integer wizardId, @PathVariable String artifactId) {
         this.wizardService.assignArtifact(wizardId, artifactId);
+
+
         return new Result(true, StatusCode.SUCCESS, "Artifact Assignment Success");
     }
 
