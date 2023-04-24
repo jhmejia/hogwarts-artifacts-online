@@ -13,7 +13,7 @@ public class WizardDtoToWizardConverter implements Converter<WizardDto, Wizard> 
         Wizard wizard = new Wizard();
         wizard.setId(source.id());
         wizard.setName(source.name());
-
         return wizard;
     }
+
 }

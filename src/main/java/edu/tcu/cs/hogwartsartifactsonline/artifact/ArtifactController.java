@@ -9,7 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("${api.endpoint.base-url}/artifacts")
@@ -21,6 +21,7 @@ public class ArtifactController {
 
     private final ArtifactDtoToArtifactConverter artifactDtoToArtifactConverter;
 
+
     public ArtifactController(ArtifactService artifactService, ArtifactToArtifactDtoConverter artifactToArtifactDtoConverter, ArtifactDtoToArtifactConverter artifactDtoToArtifactConverter) {
         this.artifactService = artifactService;
         this.artifactToArtifactDtoConverter = artifactToArtifactDtoConverter;
@@ -28,50 +29,43 @@ public class ArtifactController {
     }
 
     @GetMapping("/{artifactId}")
-    public Result findArtifactById(@PathVariable String artifactId) {
-        Artifact artifact =  this.artifactService.findById(artifactId);
-        ArtifactDto artifactDto = this.artifactToArtifactDtoConverter.convert(artifact);
-
+    public Result findArtifactById(@PathVariable String artifactId){
+        Artifact foundArtifact = this.artifactService.findById(artifactId);
+        ArtifactDto artifactDto = this.artifactToArtifactDtoConverter.convert(foundArtifact);
         return new Result(true, StatusCode.SUCCESS, "Find One Success", artifactDto);
     }
 
     @GetMapping
-    public Result findAllArtifacts() {
-        List<Artifact> artifacts = this.artifactService.findAllArtifacts();
-        // convert artifacts to list of artifact dto
-        List<ArtifactDto> artifactDtos = artifacts.stream()
+    public Result findAllArtifacts(){
+        List<Artifact> foundArtifacts = this.artifactService.findAll();
+        // Convert foundArtifacts to a list of artifactDtos
+        List<ArtifactDto> artifactDtos = foundArtifacts.stream()
                 .map(this.artifactToArtifactDtoConverter::convert)
-                .toList();
-
+                .collect(Collectors.toList());
         return new Result(true, StatusCode.SUCCESS, "Find All Success", artifactDtos);
     }
 
     @PostMapping
-    public Result addArtifact(@Valid @RequestBody ArtifactDto artifactDto) {
-        // convert artifactDto to artifact
+    public Result addArtifact(@Valid @RequestBody ArtifactDto artifactDto){
+        // Convert artifactDto to artifact
         Artifact newArtifact = this.artifactDtoToArtifactConverter.convert(artifactDto);
-        // this generate savedArtifact with unique id
         Artifact savedArtifact = this.artifactService.save(newArtifact);
-
-        // need to convert savedArtifact back to dto to avoid infinite recursion
-        ArtifactDto savedArtifactDto = artifactToArtifactDtoConverter.convert(savedArtifact);
-
-        return new Result(true, StatusCode.SUCCESS, "Add Success", savedArtifactDto);
+        ArtifactDto savedArtifactDto = this.artifactToArtifactDtoConverter.convert(savedArtifact);
+        return new Result(true, StatusCode.SUCCESS, "Add Success", savedArtifactDto) ;
     }
 
     @PutMapping("/{artifactId}")
-    public Result updateArtifact(@PathVariable String artifactId, @Valid @RequestBody ArtifactDto artifactDto) {
+    public Result updateArtifact(@PathVariable String artifactId, @Valid @RequestBody ArtifactDto artifactDto){
         Artifact update = this.artifactDtoToArtifactConverter.convert(artifactDto);
         Artifact updatedArtifact = this.artifactService.update(artifactId, update);
         ArtifactDto updatedArtifactDto = this.artifactToArtifactDtoConverter.convert(updatedArtifact);
-
         return new Result(true, StatusCode.SUCCESS, "Update Success", updatedArtifactDto);
     }
 
     @DeleteMapping("/{artifactId}")
-    public Result deleteArtifact(@PathVariable String artifactId) {
+    public Result deleteArtifact(@PathVariable String artifactId){
         this.artifactService.delete(artifactId);
-
         return new Result(true, StatusCode.SUCCESS, "Delete Success");
     }
+
 }

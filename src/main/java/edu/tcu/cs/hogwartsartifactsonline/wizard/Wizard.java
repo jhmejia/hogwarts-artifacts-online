@@ -19,6 +19,7 @@ public class Wizard implements Serializable {
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "owner")
     private List<Artifact> artifacts = new ArrayList<>();
 
+
     public Wizard() {
     }
 
@@ -51,18 +52,19 @@ public class Wizard implements Serializable {
         this.artifacts.add(artifact);
     }
 
-    public int getNumberOfArtifacts() {
+    public Integer getNumberOfArtifacts() {
         return this.artifacts.size();
     }
 
-    public void deleteArtifacts() {
-        this.artifacts.forEach(artifact -> artifact.setOwner(null));
+    public void removeAllArtifacts() {
+        this.artifacts.stream().forEach(artifact -> artifact.setOwner(null));
         this.artifacts = null;
     }
 
-    public void removeArtifact(Artifact artifact) {
-        // bi-directional removal
-        artifact.setOwner(null);
-        this.artifacts.remove(artifact);
+
+    public void removeArtifact(Artifact artifactToBeAssigned) {
+        // Remove artifact owner.
+        artifactToBeAssigned.setOwner(null);
+        this.artifacts.remove(artifactToBeAssigned);
     }
 }
